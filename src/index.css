@@ -1,68 +1,340 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+.app-container {
+  height: 100vh;
+  background-color: #f9fafb;
+  position: relative;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+.save-button-container {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 30;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.flow-wrapper {
+  height: 100%;
 }
 
-button {
+.react-flow {
+  background-color: #f9fafb;
+}
+
+.right-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 320px;
+  background-color: white;
+  border-left: 1px solid #e5e7eb;
+  box-shadow: -4px 0 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+}
+
+/* Error Notification Styles */
+.error-notification {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+}
+
+.error-content {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 8px 16px;
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.error-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.error-close-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  height: 24px;
+  width: 24px;
+  color: #dc2626;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-close-btn:hover {
+  color: #991b1b;
+  background-color: #fecaca;
+}
+
+/* Save Button Styles */
+.save-button {
+  background-color: #2563eb;
+  color: white;
+  border: 1px solid #2563eb;
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Message Node Styles */
+.message-node {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e5e7eb;
+  min-width: 200px;
+  overflow: hidden;
+}
+
+.message-node.selected {
+  border-color: #60a5fa;
+}
+
+.message-node-header {
+  background-color: #ccfbf1;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.message-node-icon {
+  width: 16px;
+  height: 16px;
+  color: #0f766e;
+}
+
+.message-node-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #134e4a;
+}
+
+.message-node-content {
+  padding: 12px 16px;
+  background-color: white;
+}
+
+.message-node-text {
+  font-size: 14px;
+  color: #374151;
+}
+
+/* Nodes Panel Styles */
+.nodes-panel {
+  height: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.nodes-panel-header {
+  margin-bottom: 24px;
+}
+
+.nodes-panel-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.nodes-panel-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.draggable-node {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: grab;
+  transition: background-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.draggable-node:hover {
+  background-color: #f9fafb;
+}
+
+.draggable-node:active {
+  cursor: grabbing;
+}
+
+.draggable-node-icon-container {
+  width: 48px;
+  height: 48px;
+  background-color: #f3e8ff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.draggable-node-icon {
+  width: 24px;
+  height: 24px;
+  color: #7c3aed;
+}
+
+.draggable-node-label {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Settings Panel Styles */
+.settings-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 320px;
+  background-color: white;
+  border-left: 1px solid #e5e7eb;
+  box-shadow: -4px 0 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settings-back-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-back-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.settings-back-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.settings-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.settings-content {
+  flex: 1;
+  padding: 16px;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: none;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* React Flow Handle Styles */
+.react-flow__handle {
+  width: 12px !important;
+  height: 12px !important;
+  background-color: #6b7280 !important;
+  border: 2px solid white !important;
+}
+
+.react-flow__handle-left {
+  left: -6px !important;
+}
+
+.react-flow__handle-right {
+  right: -6px !important;
+}
+
+.react-flow__edge-path {
+  stroke: #6b7280;
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #3b82f6;
 }
