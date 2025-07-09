@@ -3,7 +3,6 @@ import {
   ReactFlow,
   useReactFlow,
   type Node,
-  type Edge,
   addEdge,
   type Connection,
   useNodesState,
@@ -75,44 +74,20 @@ const loadInitialData = () => {
   };
 };
 
-const initialNodes: Node[] = [
-  {
-    id: "1",
-    type: "messageNode",
-    position: { x: 100, y: 200 },
-    data: { message: "test message 1" },
-  },
-  {
-    id: "2",
-    type: "messageNode",
-    position: { x: 400, y: 100 },
-    data: { message: "test message 2" },
-  },
-];
-
-const initialEdges: Edge[] = [
-  {
-    id: "e1-2",
-    source: "1",
-    target: "2",
-    type: "smoothstep",
-  },
-];
-
 let id = 3;
 const getId = () => `${id++}`;
 
 export function FlowCanvas() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const initialData = loadInitialData();
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialData.nodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialData.edges)
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
   const [showError, setShowError] = useState(false);
   const { screenToFlowPosition } = useReactFlow();
-  const initialData = loadInitialData();
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
@@ -219,7 +194,7 @@ export function FlowCanvas() {
     return () => clearTimeout(timeoutId);
   }, [nodes, edges, saveToLocalStorage]);
 
-  // Track unsaved changes
+  
   useEffect(() => {
     setHasUnsavedChanges(true);
   }, [nodes, edges]);
@@ -234,7 +209,7 @@ export function FlowCanvas() {
       )}
 
       <div className="save-button-container">
-        <SaveButton onClick={saveChanges} />
+        <SaveButton onClick={saveChanges} hasUnsavedChanges={hasUnsavedChanges} />
       </div>
 
       <div className="flow-wrapper" ref={reactFlowWrapper}>
