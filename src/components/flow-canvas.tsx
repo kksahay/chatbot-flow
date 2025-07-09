@@ -9,6 +9,7 @@ import {
   useEdgesState,
   Background,
   type ReactFlowInstance,
+  Controls,
 } from "@xyflow/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -80,8 +81,8 @@ const getId = () => `${id++}`;
 export function FlowCanvas() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const initialData = loadInitialData();
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialData.nodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialData.edges)
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialData.nodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialData.edges);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
@@ -194,7 +195,6 @@ export function FlowCanvas() {
     return () => clearTimeout(timeoutId);
   }, [nodes, edges, saveToLocalStorage]);
 
-  
   useEffect(() => {
     setHasUnsavedChanges(true);
   }, [nodes, edges]);
@@ -208,8 +208,14 @@ export function FlowCanvas() {
         />
       )}
 
-      <div className="save-button-container">
-        <SaveButton onClick={saveChanges} hasUnsavedChanges={hasUnsavedChanges} />
+      <div className="top-bar">
+        <div className="app-title">
+          <h1>Chatbot Flow Builder</h1>
+        </div>
+        <SaveButton
+          onClick={saveChanges}
+          hasUnsavedChanges={hasUnsavedChanges}
+        />
       </div>
 
       <div className="flow-wrapper" ref={reactFlowWrapper}>
@@ -226,24 +232,40 @@ export function FlowCanvas() {
           onPaneClick={onPaneClick}
           nodeTypes={nodeTypes}
           fitView
+          fitViewOptions={{
+            padding: 0.3,
+            minZoom: 0.1,
+            maxZoom: 1.0,
+            includeHiddenNodes: false,
+          }}
+          minZoom={0.1}
+          maxZoom={1.2}
           className="react-flow"
           defaultEdgeOptions={{ type: "smoothstep" }}
         >
           <Background color="#e5e7eb" gap={20} />
+          <Controls
+            position="bottom-left"
+            showZoom={true}
+            showFitView={true}
+            showInteractive={false}
+          />
         </ReactFlow>
       </div>
 
-      <div className="right-panel">
-        {showSettingsPanel && selectedNode ? (
-          <SettingsPanel
-            node={selectedNode}
-            onClose={() => setShowSettingsPanel(false)}
-            onUpdateNode={updateNodeData}
-          />
-        ) : (
-          <NodesPanel />
-        )}
-      </div>
+      {
+        <div className="right-panel">
+          {showSettingsPanel && selectedNode ? (
+            <SettingsPanel
+              node={selectedNode}
+              onClose={() => setShowSettingsPanel(false)}
+              onUpdateNode={updateNodeData}
+            />
+          ) : (
+            <NodesPanel />
+          )}
+        </div>
+      }
     </div>
   );
 }

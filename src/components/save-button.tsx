@@ -8,7 +8,7 @@ export function SaveButton({ onClick, hasUnsavedChanges = false }: SaveButtonPro
     <button
       className={`save-button ${hasUnsavedChanges ? "unsaved" : ""}`}
       onClick={onClick}
-      title="Save flow (Ctrl+S)"
+      title="Save flow"
     >
       Save Changes
     </button>
